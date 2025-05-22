@@ -47,6 +47,31 @@ private:
   GLFWwindow *handle;
 };
 
+class WindowHints {
+public:
+  WindowHints(string name, map<int, int> flags, int height, int width) {
+    name = name;
+    flags = flags;
+    width = width;
+    height = height;
+  };
+  WindowHints Default() {
+    return WindowHints("GLFW Window",
+                       {{GLFW_CONTEXT_VERSION_MAJOR, 4},
+                        {GLFW_CONTEXT_VERSION_MINOR, 6},
+                        {GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE},
+                        {GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE},
+                        {GLFW_VISIBLE, GLFW_FALSE}},
+                       1280, 720);
+  }
+
+private:
+  string name;
+  map<int, int> flags;
+  int width;
+  int height;
+};
+
 int main() {
   Window w = Window(800, 600, "GLFW Window");
   return 0;
