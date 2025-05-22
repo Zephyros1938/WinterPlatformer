@@ -2,77 +2,40 @@
 #include <GLFW/glfw3.h>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/glm.hpp>
-#include <iostream>
-#include <map>
-#include <string>
+#include "Window.hpp"
 using namespace std;
 
-class Window {
+class MyGame : public Window {
 public:
-  Window(int width, int height, string title,
-         std::map<int, int> flags = {
-             {GLFW_CONTEXT_VERSION_MAJOR, 4},
-             {GLFW_CONTEXT_VERSION_MINOR, 6},
-             {GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE},
-             {GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE},
-             {GLFW_VISIBLE, GLFW_FALSE}}) {
+    MyGame() : Window() {}
 
-    if (!glfwInit()) {
-      std::cerr << "GLFW initialization failed!" << std::endl;
-      throw std::runtime_error("glfwInit failed");
+    void onInit() override {
+        glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+        std::cout << "Initialized MyGame window\n";
     }
 
-    for (const auto &pair : flags) {
-      glfwWindowHint(pair.first, pair.second);
+    void onUpdate(double dt) override {
+        // Game logic here
+        std::cout << "Updating, dt = " << dt << " seconds\n";
     }
 
-    handle = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-    if (!handle) {
-      glfwTerminate();
-      std::cerr << "Failed to create GLFW Window!" << std::endl;
-      throw std::runtime_error("glfwCreateWindow failed");
+    void onRender() override {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Rendering code here
     }
 
-    glfwMakeContextCurrent(handle);
-  }
-
-  GLFWwindow *getHandle() { return handle; }
-
-  ~Window() {
-    glfwDestroyWindow(handle);
-    glfwTerminate();
-  }
-
-private:
-  GLFWwindow *handle;
+    void onInput() override {
+        if (getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            setShouldClose(true);
+        }
+    }
 };
 
-class WindowHints {
-public:
-  WindowHints(string name, map<int, int> flags, int height, int width) {
-    name = name;
-    flags = flags;
-    width = width;
-    height = height;
-  };
-  WindowHints Default() {
-    return WindowHints("GLFW Window",
-                       {{GLFW_CONTEXT_VERSION_MAJOR, 4},
-                        {GLFW_CONTEXT_VERSION_MINOR, 6},
-                        {GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE},
-                        {GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE},
-                        {GLFW_VISIBLE, GLFW_FALSE}},
-                       1280, 720);
-  }
-
-private:
-  string name;
-  map<int, int> flags;
-  int width;
-  int height;
-};
 
 int main() {
-  Window w = Window(800, 600, "GLFW Window");
+  MyGame w = MyGame();
+
+  w.run();
+
   return 0;
 }
