@@ -9,8 +9,11 @@ public:
 
     virtual void onInit();
     virtual void onUpdate(double dt);
+    virtual void processInput(double dt);
     virtual void onRender();
     virtual void onInput();
+
+    virtual void onResize(int width, int height);
 
     void run();
 

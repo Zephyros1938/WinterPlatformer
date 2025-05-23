@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <string>
 #include <map>
@@ -9,7 +10,7 @@
 
 class WindowHints {
 public:
-    WindowHints(std::string title, std::map<int, int> flags, int height, int width);
+    WindowHints(std::string title, std::map<int, int> flags, const unsigned int height, const unsigned int width);
     static WindowHints Default();
 
     std::string title;
@@ -20,6 +21,7 @@ public:
 
 class WindowBase {
 public:
+    const WindowHints Hints;
     explicit WindowBase(WindowHints hints = WindowHints::Default());
 
     GLFWwindow* getHandle();
@@ -32,7 +34,7 @@ public:
     void show();
     void hide();
     int getKey(int key);
-    GLenum getMouseButton(GLenum button);
+    int getMouseButton(int button);
     GLenum getCursorMode();
     std::tuple<double, double> getCursorPos();
     std::tuple<int, int> getWindowSize();

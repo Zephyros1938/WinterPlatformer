@@ -1,6 +1,7 @@
 #include "WindowBase.hpp"
+#include <GLFW/glfw3.h>
 
-WindowHints::WindowHints(std::string title, std::map<int, int> flags, int height, int width)
+WindowHints::WindowHints(std::string title, std::map<int, int> flags, const unsigned int height, const unsigned int width)
     : title(std::move(title)), flags(std::move(flags)), width(width), height(height) {}
 
 WindowHints WindowHints::Default() {
@@ -15,7 +16,10 @@ WindowHints WindowHints::Default() {
                        720, 1080);
 }
 
-WindowBase::WindowBase(WindowHints hints) {
+
+
+WindowBase::WindowBase(const WindowHints hints) : Hints(hints) {
+
     if (!glfwInit()) {
         std::cerr << "GLFW initialization failed!" << std::endl;
         throw std::runtime_error("glfwInit failed");
@@ -33,6 +37,11 @@ WindowBase::WindowBase(WindowHints hints) {
     }
 
     glfwMakeContextCurrent(handle);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "Failed to initialize GLAD\n";
+        throw std::runtime_error("gladLoadGLLoader failed");
+    }
 }
 
 GLFWwindow* WindowBase::getHandle() {
@@ -71,7 +80,7 @@ int WindowBase::getKey(int key) {
     return glfwGetKey(handle, key);
 }
 
-GLenum WindowBase::getMouseButton(GLenum button) {
+int WindowBase::getMouseButton(int button) {
     return glfwGetMouseButton(handle, button);
 }
 
